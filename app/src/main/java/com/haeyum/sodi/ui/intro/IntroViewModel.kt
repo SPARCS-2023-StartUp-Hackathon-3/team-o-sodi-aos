@@ -7,7 +7,5 @@ import javax.inject.Inject
 
 @HiltViewModel
 class IntroViewModel @Inject constructor(): ViewModel() {
-    val email = MutableStateFlow("")
-    val password = MutableStateFlow("")
 
 }

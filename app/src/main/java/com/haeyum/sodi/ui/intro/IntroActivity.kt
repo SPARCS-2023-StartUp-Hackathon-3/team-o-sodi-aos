@@ -24,10 +24,9 @@ class IntroActivity : ComponentActivity() {
 
         setContent {
             val systemUiController = rememberSystemUiController()
-            var isLogin by remember { mutableStateOf(true) }
 
             SODITheme {
-                SignInScreen(isLogin = isLogin)
+                SignInScreen()
 //                SignUpScreen()
             }
 

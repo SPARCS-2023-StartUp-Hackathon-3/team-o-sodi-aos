@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.AbsoluteRoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,12 +35,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.haeyum.sodi.R
 import com.haeyum.sodi.ui.intro.component.IntroComponent.CardTextField
 import com.haeyum.sodi.ui.intro.component.IntroComponent.RoundedButton
 
 @Composable
-fun SignInScreen(isLogin: Boolean) {
+fun SignInScreen(viewModel: SignInViewModel = hiltViewModel()) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -91,22 +93,22 @@ fun SignInScreen(isLogin: Boolean) {
                     .fillMaxWidth()
                     .padding(horizontal = 36.dp)
             ) {
-                var email by remember { mutableStateOf("") }
-                var password by remember { mutableStateOf("") }
+                val email by viewModel.email.collectAsState()
+                val password by viewModel.password.collectAsState()
 
                 Column(modifier = Modifier.fillMaxWidth()) {
                     CardTextField(
                         type = "Email",
                         hint = "email address",
                         value = email,
-                        onValueChange = { email = it },
+                        onValueChange = viewModel::setEmail,
                     )
                     Spacer(modifier = Modifier.height(18.dp))
                     CardTextField(
                         type = "Password",
                         hint = "password",
                         value = password,
-                        onValueChange = { password = it },
+                        onValueChange = viewModel::setPassword,
                         visualTransformation = PasswordVisualTransformation(),
                     )
                 }

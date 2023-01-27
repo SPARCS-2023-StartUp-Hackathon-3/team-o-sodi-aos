@@ -22,6 +22,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,12 +31,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.haeyum.sodi.ui.intro.component.IntroComponent
 import com.haeyum.sodi.supports.Keyboard
 import com.haeyum.sodi.supports.keyboardAsState
 
 @Composable
-fun SignUpScreen() {
+fun SignUpScreen(viewModel: SignUpViewModel = hiltViewModel()) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -82,33 +84,38 @@ fun SignUpScreen() {
                     .padding(top = 40.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                val email by viewModel.email.collectAsState()
+                val username by viewModel.username.collectAsState()
+                val password by viewModel.password.collectAsState()
+                val bio by viewModel.bio.collectAsState()
+
                 Column(verticalArrangement = Arrangement.spacedBy(18.dp)) {
                     IntroComponent.CardTextField(
                         type = "Email",
                         hint = "email address",
-                        value = "",
-                        onValueChange = {},
+                        value = email,
+                        onValueChange = viewModel::setEmail,
                     )
 
                     IntroComponent.CardTextField(
                         type = "Username",
                         hint = "username",
-                        value = "",
-                        onValueChange = {},
+                        value = username,
+                        onValueChange = viewModel::setUsername,
                     )
 
                     IntroComponent.CardTextField(
                         type = "Password",
                         hint = "password",
-                        value = "",
-                        onValueChange = {},
+                        value = password,
+                        onValueChange = viewModel::setPassword,
                     )
 
                     IntroComponent.CardTextField(
                         type = "Bio",
                         hint = "biography",
-                        value = "",
-                        onValueChange = {},
+                        value = bio,
+                        onValueChange = viewModel::setBio,
                     )
                 }
             }
