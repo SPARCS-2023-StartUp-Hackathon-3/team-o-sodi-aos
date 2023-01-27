@@ -11,8 +11,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.core.view.WindowCompat
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.haeyum.sodi.ui.intro.signIn.SignInScreen
+import com.haeyum.sodi.ui.intro.signUp.SignUpScreen
 import com.haeyum.sodi.ui.theme.SODITheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class IntroActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -23,8 +27,8 @@ class IntroActivity : ComponentActivity() {
             var isLogin by remember { mutableStateOf(true) }
 
             SODITheme {
-//                LoginScreen(isLogin = isLogin)
-                RegisterScreen()
+                SignInScreen(isLogin = isLogin)
+//                SignUpScreen()
             }
 
             SideEffect {

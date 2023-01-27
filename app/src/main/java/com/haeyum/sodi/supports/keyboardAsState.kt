@@ -1,4 +1,4 @@
-package com.haeyum.sodi.ui.supports
+package com.haeyum.sodi.supports
 
 import android.graphics.Rect
 import android.view.ViewTreeObserver

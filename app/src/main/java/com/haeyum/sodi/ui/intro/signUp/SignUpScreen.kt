@@ -1,4 +1,4 @@
-package com.haeyum.sodi.ui.intro
+package com.haeyum.sodi.ui.intro.signUp
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -32,11 +31,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.haeyum.sodi.ui.intro.component.IntroComponent
-import com.haeyum.sodi.ui.supports.Keyboard
-import com.haeyum.sodi.ui.supports.keyboardAsState
+import com.haeyum.sodi.supports.Keyboard
+import com.haeyum.sodi.supports.keyboardAsState
 
 @Composable
-fun RegisterScreen() {
+fun SignUpScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -133,6 +132,7 @@ fun RegisterScreen() {
 
                 AnimatedVisibility(visible = keyboardState == Keyboard.Closed) {
                     Column {
+                        Spacer(modifier = Modifier.size(24.dp))
                         IntroComponent.NavigateTextButton(
                             text = "Already have any account? ",
                             highlightText = "Sign In",

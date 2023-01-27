@@ -1,4 +1,4 @@
-package com.haeyum.sodi.ui.intro
+package com.haeyum.sodi.ui.intro.signIn
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -39,7 +39,7 @@ import com.haeyum.sodi.ui.intro.component.IntroComponent.CardTextField
 import com.haeyum.sodi.ui.intro.component.IntroComponent.RoundedButton
 
 @Composable
-fun LoginScreen(isLogin: Boolean) {
+fun SignInScreen(isLogin: Boolean) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -76,7 +76,7 @@ fun LoginScreen(isLogin: Boolean) {
                 .background(color = Color.White)
         ) {
             Text(
-                text = "Login",
+                text = "Sign In",
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(48.dp),
@@ -112,7 +112,7 @@ fun LoginScreen(isLogin: Boolean) {
                 }
 
                 RoundedButton(
-                    text = "Login",
+                    text = "Sign In",
                     modifier = Modifier
                         .padding(top = 36.dp)
                         .fillMaxWidth(),
