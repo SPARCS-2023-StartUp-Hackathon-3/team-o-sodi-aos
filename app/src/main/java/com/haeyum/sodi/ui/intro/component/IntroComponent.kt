@@ -26,12 +26,21 @@ import androidx.compose.ui.unit.sp
 
 object IntroComponent {
     @Composable
-    fun RoundedButton(text: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
+    fun RoundedButton(
+        text: String,
+        modifier: Modifier = Modifier,
+        enabled: Boolean = true,
+        onClick: () -> Unit
+    ) {
         Button(
             onClick = onClick,
             modifier = modifier,
+            enabled = enabled,
             shape = RoundedCornerShape(16.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.Black,
+                disabledContainerColor = Color.LightGray
+            ),
             contentPadding = PaddingValues(16.dp)
         ) {
             Text(

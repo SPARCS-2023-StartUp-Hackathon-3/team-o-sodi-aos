@@ -118,6 +118,7 @@ fun SignInScreen(
                     modifier = Modifier
                         .padding(top = 36.dp)
                         .fillMaxWidth(),
+                    enabled = viewModel.enabledSignIn.collectAsState().value
                 ) {
                     viewModel.requestPostSignUp()
                 }
