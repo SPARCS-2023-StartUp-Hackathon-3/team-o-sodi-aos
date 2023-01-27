@@ -245,3 +245,7 @@ hs_err_pid*
 !/gradle/wrapper/gradle-wrapper.jar
 
 # End of https://www.toptal.com/developers/gitignore/api/android,androidstudio,intellij+all
+
+app/src/main/java/com/haeyum/.DS_Store
+
+app/src/main/java/com/haeyum/sodi/.DS_Store
