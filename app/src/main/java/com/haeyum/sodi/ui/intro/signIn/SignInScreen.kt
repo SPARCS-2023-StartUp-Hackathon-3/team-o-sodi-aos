@@ -1,5 +1,7 @@
 package com.haeyum.sodi.ui.intro.signIn
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -11,6 +13,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.shape.AbsoluteRoundedCornerShape
 import androidx.compose.material3.Text
@@ -19,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,6 +38,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.haeyum.sodi.R
+import com.haeyum.sodi.supports.Keyboard
+import com.haeyum.sodi.supports.keyboardAsState
 import com.haeyum.sodi.ui.intro.component.IntroComponent.CardTextField
 import com.haeyum.sodi.ui.intro.component.IntroComponent.RoundedButton
 
@@ -77,16 +83,27 @@ fun SignInScreen(
                 .clip(AbsoluteRoundedCornerShape(topLeft = 60.dp))
                 .background(color = Color.White)
         ) {
-            Text(
-                text = "Sign In",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(48.dp),
-                color = Color.Black,
-                fontSize = 32.sp,
-                fontWeight = FontWeight.Light,
-                textAlign = TextAlign.Center
-            )
+            val keyboardState by keyboardAsState()
+
+            AnimatedVisibility(visible = keyboardState == Keyboard.Closed) {
+                Column {
+                    Spacer(modifier = Modifier.size(48.dp))
+                    Text(
+                        text = "Sign In",
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 24.dp),
+                        color = Color.Black,
+                        fontSize = 32.sp,
+                        fontWeight = FontWeight.Light,
+                        textAlign = TextAlign.Center
+                    )
+                    Spacer(modifier = Modifier.size(24.dp))
+                }
+            }
+            AnimatedVisibility(visible = keyboardState == Keyboard.Opened) {
+                Spacer(modifier = Modifier.size(28.dp))
+            }
 
             Column(
                 modifier = Modifier
@@ -123,23 +140,25 @@ fun SignInScreen(
                     viewModel.requestPostSignUp()
                 }
                 Spacer(modifier = Modifier.weight(1f))
-                TextButton(
-                    onClick = navigateToSignUp,
-                    modifier = Modifier
-                        .align(CenterHorizontally)
-                        .padding(bottom = 24.dp)
-                ) {
-                    Text(
-                        text = buildAnnotatedString {
-                            append("Don't have any account? ")
-                            withStyle(style = SpanStyle(fontWeight = FontWeight.Medium)) {
-                                append("Sign Up")
-                            }
-                        },
-                        color = Color.Black,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Normal
-                    )
+                AnimatedVisibility(visible = keyboardState == Keyboard.Closed) {
+                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Center) {
+                        TextButton(
+                            onClick = navigateToSignUp,
+                            modifier = Modifier.padding(bottom = 24.dp)
+                        ) {
+                            Text(
+                                text = buildAnnotatedString {
+                                    append("Don't have any account? ")
+                                    withStyle(style = SpanStyle(fontWeight = FontWeight.Medium)) {
+                                        append("Sign Up")
+                                    }
+                                },
+                                color = Color.Black,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Normal
+                            )
+                        }
+                    }
                 }
             }
         }

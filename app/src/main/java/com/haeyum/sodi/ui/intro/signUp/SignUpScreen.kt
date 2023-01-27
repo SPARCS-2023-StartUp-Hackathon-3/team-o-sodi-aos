@@ -58,16 +58,6 @@ fun SignUpScreen(
                     .fillMaxWidth()
                     .padding(horizontal = 12.dp, vertical = 24.dp)
             ) {
-//                IconButton(
-//                    onClick = onNavigateUp,
-//                    modifier = Modifier.align(Alignment.CenterStart)
-//                ) {
-//                    Icon(
-//                        imageVector = Icons.Default.ArrowBack,
-//                        contentDescription = "Back",
-//                        tint = Color.White
-//                    )
-//                }
                 Text(
                     text = "Sign Up",
                     modifier = Modifier.align(Alignment.Center),
