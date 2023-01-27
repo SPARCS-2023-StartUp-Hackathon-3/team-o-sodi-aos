@@ -14,6 +14,10 @@ class SignInViewModel @Inject constructor() : ViewModel() {
     val email = _email.asStateFlow()
     val password = _password.asStateFlow()
 
+    fun requestPostSignUp() {
+        println("${email.value}|${password.value}")
+    }
+
     fun setEmail(email: String) {
         _email.value = email
     }

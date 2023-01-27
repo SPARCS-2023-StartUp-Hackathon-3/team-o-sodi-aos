@@ -18,9 +18,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
@@ -41,7 +38,10 @@ import com.haeyum.sodi.ui.intro.component.IntroComponent.CardTextField
 import com.haeyum.sodi.ui.intro.component.IntroComponent.RoundedButton
 
 @Composable
-fun SignInScreen(viewModel: SignInViewModel = hiltViewModel()) {
+fun SignInScreen(
+    viewModel: SignInViewModel = hiltViewModel(),
+    navigateToSignUp: () -> Unit,
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -119,11 +119,11 @@ fun SignInScreen(viewModel: SignInViewModel = hiltViewModel()) {
                         .padding(top = 36.dp)
                         .fillMaxWidth(),
                 ) {
-
+                    viewModel.requestPostSignUp()
                 }
                 Spacer(modifier = Modifier.weight(1f))
                 TextButton(
-                    onClick = { },
+                    onClick = navigateToSignUp,
                     modifier = Modifier
                         .align(CenterHorizontally)
                         .padding(bottom = 24.dp)

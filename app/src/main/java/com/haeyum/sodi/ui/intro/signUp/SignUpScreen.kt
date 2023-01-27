@@ -37,7 +37,10 @@ import com.haeyum.sodi.supports.Keyboard
 import com.haeyum.sodi.supports.keyboardAsState
 
 @Composable
-fun SignUpScreen(viewModel: SignUpViewModel = hiltViewModel()) {
+fun SignUpScreen(
+    viewModel: SignUpViewModel = hiltViewModel(),
+    onNavigateUp: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -56,7 +59,7 @@ fun SignUpScreen(viewModel: SignUpViewModel = hiltViewModel()) {
                     .padding(horizontal = 12.dp, vertical = 24.dp)
             ) {
                 IconButton(
-                    onClick = { /*TODO*/ },
+                    onClick = onNavigateUp,
                     modifier = Modifier.align(Alignment.CenterStart)
                 ) {
                     Icon(
