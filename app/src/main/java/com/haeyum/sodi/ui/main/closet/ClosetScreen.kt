@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -31,14 +32,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.haeyum.sodi.R
+import com.haeyum.sodi.supports.LogHelper
 import com.haeyum.sodi.ui.main.MainViewModel
 import com.haeyum.sodi.ui.main.component.MainComponent
 import kotlinx.coroutines.flow.collectLatest
+import okhttp3.internal.toHexString
+import kotlin.random.Random
+import kotlin.random.nextInt
+import kotlin.random.nextUInt
 
 @Composable
 fun ClosetScreen(
@@ -48,6 +57,9 @@ fun ClosetScreen(
 ) {
     var bitmap by remember {
         mutableStateOf<Bitmap?>(null)
+    }
+    val colors = remember {
+        hello()
     }
 
     Box(
@@ -121,6 +133,19 @@ fun ClosetScreen(
         ) {
             Icon(imageVector = Icons.Default.AddAPhoto, contentDescription = null)
         }
+
+//        Box(
+//            modifier = Modifier
+//                .align(Alignment.Center)
+//                .size(300.dp)
+//                .background(brush = Brush.sweepGradient(colors)),
+//            contentAlignment = Alignment.Center
+//        ) {
+//            Image(
+//                painter = painterResource(id = R.drawable.ic_launcher_background),
+//                contentDescription = null
+//            )
+//        }
     }
 
     LaunchedEffect(Unit) {
@@ -128,6 +153,18 @@ fun ClosetScreen(
             bitmap = it
         }
     }
+}
+
+fun hello(): List<Color> {
+    val colors = arrayListOf<Color>()
+    repeat(Random.nextInt(8, 24)) {
+        val r = Random.nextFloat()
+        val g = Random.nextFloat()
+        val b = Random.nextFloat()
+        colors.add(Color(r, g, b))
+    }
+
+    return colors
 }
 
 @Composable
@@ -143,11 +180,15 @@ private fun ClosetItem(bitmap: Bitmap) {
 //            modifier = Modifier.fillMaxSize(),
 //            contentScale = ContentScale.FillBounds
 //        )
+
         Image(
             bitmap = bitmap.asImageBitmap(),
             contentDescription = null,
-            modifier = Modifier.fillMaxSize().aspectRatio(1f),
+            modifier = Modifier
+                .fillMaxSize()
+                .aspectRatio(1f),
             contentScale = ContentScale.FillBounds
         )
+
     }
 }

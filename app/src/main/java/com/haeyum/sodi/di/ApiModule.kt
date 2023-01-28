@@ -38,7 +38,7 @@ object ApiModule {
             level = LogLevel.ALL
                 logger = object : Logger {
                     override fun log(message: String) {
-                        Log.d("PANGMOO_KTOR", message)
+                        Log.d("KTOR", message)
                     }
                 }
         }
