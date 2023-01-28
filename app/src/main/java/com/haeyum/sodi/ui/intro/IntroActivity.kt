@@ -1,5 +1,6 @@
 package com.haeyum.sodi.ui.intro
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -7,10 +8,10 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
 import androidx.core.view.WindowCompat
-import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.haeyum.sodi.ui.intro.navigation.SetupIntroNavGraph
+import com.haeyum.sodi.ui.main.MainActivity
 import com.haeyum.sodi.ui.theme.SODITheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -31,8 +32,9 @@ class IntroActivity : ComponentActivity() {
 
             SideEffect {
                 systemUiController.setStatusBarColor(color = Color.Transparent)
-//                systemUiController.setStatusBarColor(color = Color(0xFF222222))
             }
         }
+
+        startActivity(Intent(this, MainActivity::class.java))
     }
 }
