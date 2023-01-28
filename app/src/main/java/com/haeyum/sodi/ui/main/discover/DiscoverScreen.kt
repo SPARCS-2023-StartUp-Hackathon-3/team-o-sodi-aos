@@ -26,6 +26,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Comment
+import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -34,6 +35,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -101,7 +106,12 @@ fun DiscoverScreen(viewModel: DiscoverViewModel = hiltViewModel(), modifier: Mod
                             }
                         }
                         EquipItems {
-                            context.startActivity(Intent(context, ProductDetailActivity::class.java))
+                            context.startActivity(
+                                Intent(
+                                    context,
+                                    ProductDetailActivity::class.java
+                                )
+                            )
                         }
                         Column(modifier = Modifier.padding(horizontal = 18.dp)) {
                             Row(
@@ -112,12 +122,14 @@ fun DiscoverScreen(viewModel: DiscoverViewModel = hiltViewModel(), modifier: Mod
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Row(verticalAlignment = Alignment.CenterVertically) {
+                                    var isFavorite by remember { mutableStateOf(false) }
+
                                     IconButton(
-                                        onClick = { /*TODO*/ },
+                                        onClick = { isFavorite = !isFavorite },
                                         modifier = Modifier.padding(0.dp)
                                     ) {
                                         Icon(
-                                            imageVector = Icons.Outlined.FavoriteBorder,
+                                            imageVector = if (isFavorite) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
                                             contentDescription = "favorite"
                                         )
                                     }
