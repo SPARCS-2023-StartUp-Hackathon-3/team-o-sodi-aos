@@ -13,6 +13,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -25,6 +28,7 @@ import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.GridView
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -59,7 +63,7 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(), modifier: Modif
                 .statusBarsPadding(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = Modifier.size(36.dp))
+            Spacer(modifier = Modifier.size(28.dp))
             Image(
                 painter = painterResource(id = R.drawable.logo_black),
                 contentDescription = null,
@@ -68,7 +72,7 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(), modifier: Modif
                     .size(96.dp)
             )
 
-            Spacer(modifier = Modifier.size(24.dp))
+            Spacer(modifier = Modifier.size(20.dp))
             Text(
                 text = "Kawai PangMoo",
                 color = Color.Black,
@@ -77,7 +81,7 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(), modifier: Modif
                 textAlign = TextAlign.Center
             )
 
-            Spacer(modifier = Modifier.size(24.dp))
+            Spacer(modifier = Modifier.size(20.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(0.75f),
                 horizontalArrangement = Arrangement.Center
@@ -117,9 +121,10 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(), modifier: Modif
                 )
             }
 
-            Spacer(modifier = Modifier.size(20.dp))
+            Spacer(modifier = Modifier.size(36.dp))
         }
 
+        Divider(color = Color(0xFFEFEFEF), thickness = (1.5).dp)
         TabRow(selectedTabIndex = 0) {
             Tab(selected = true, onClick = { /*TODO*/ }) {
                 Icon(
@@ -136,6 +141,37 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(), modifier: Modif
                 )
             }
         }
+
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(3),
+            modifier = Modifier
+                .weight(1f)
+                .background(Color(0xFFEFEFEF))
+                .padding(horizontal = 8.dp),
+            content = {
+                items(99) {
+                    Image(
+                        painter = painterResource(id = R.drawable.logo_black),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(8.dp))
+                            .padding(top = 8.dp)
+                            .then(
+                                when {
+                                    it % 3 == 0 -> Modifier.padding(end = 4.dp)
+                                    it % 3 == 1 -> Modifier.padding(horizontal = 4.dp)
+                                    else -> Modifier.padding(start = 4.dp)
+                                }
+                            )
+                            .size(120.dp)
+//                            .weight(1f)
+                    )
+                }
+                item {
+                    Spacer(modifier = Modifier.size(8.dp))
+                }
+            },
+        )
     }
 }
 
