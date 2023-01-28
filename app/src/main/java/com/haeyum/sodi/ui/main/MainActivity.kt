@@ -124,7 +124,7 @@ class MainActivity : ComponentActivity() {
                             icon = {
                                 Icon(
                                     imageVector = Icons.Outlined.DoorFront,
-                                    contentDescription = "Closet",
+                                    contentDescription = "com.haeyum.sodi.data.api.getCloset.Closet",
                                     tint = if (currentRoute == MainNavRoute.Closet) Color(0xFF8973D8) else Color(
                                         0xFFBDBDBD
                                     )

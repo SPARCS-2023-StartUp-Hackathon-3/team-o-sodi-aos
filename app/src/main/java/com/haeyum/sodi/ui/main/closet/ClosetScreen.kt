@@ -11,10 +11,10 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddAPhoto
 import androidx.compose.material3.FloatingActionButton
@@ -26,28 +26,24 @@ import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.haeyum.sodi.R
-import com.haeyum.sodi.supports.LogHelper
+import coil.compose.AsyncImage
+import com.haeyum.sodi.data.api.getCloset.Closet
 import com.haeyum.sodi.ui.main.MainViewModel
 import com.haeyum.sodi.ui.main.component.MainComponent
 import kotlinx.coroutines.flow.collectLatest
-import okhttp3.internal.toHexString
 import kotlin.random.Random
-import kotlin.random.nextInt
-import kotlin.random.nextUInt
 
 @Composable
 fun ClosetScreen(
@@ -76,12 +72,14 @@ fun ClosetScreen(
                     .statusBarsPadding(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                val selectedTabIndex by viewModel.selectedTabIndex.collectAsState()
+
                 TabRow(
                     selectedTabIndex = 0,
                     contentColor = Color(0xFF8973D8),
                     indicator = {
                         TabRowDefaults.Indicator(
-                            Modifier.tabIndicatorOffset(it[viewModel.selectedTabIndex.value]),
+                            Modifier.tabIndicatorOffset(it[selectedTabIndex]),
                             color = Color(0xFF8973D8)
                         )
                     }
@@ -110,14 +108,15 @@ fun ClosetScreen(
                     }
                 }
 
+                val closets by viewModel.closets.collectAsState()
+
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(3),
                     modifier = Modifier.background(Color(0xFFFCFCFC)),
                     contentPadding = PaddingValues(8.dp),
                     content = {
-                        items(9) {
-                            if (bitmap != null)
-                                ClosetItem(bitmap!!)
+                        items(closets) {
+                            ClosetItem(it)
                         }
                     },
                 )
@@ -168,27 +167,19 @@ fun hello(): List<Color> {
 }
 
 @Composable
-private fun ClosetItem(bitmap: Bitmap) {
+private fun ClosetItem(closet: Closet) {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .border(width = 1.dp, color = Color(0xFF000000)),
     ) {
-//        Image(
-//            painter = painterResource(id = R.drawable.ic_launcher_background),
-//            contentDescription = null,
-//            modifier = Modifier.fillMaxSize(),
-//            contentScale = ContentScale.FillBounds
-//        )
-
-        Image(
-            bitmap = bitmap.asImageBitmap(),
+        AsyncImage(
+            model = "http://ec2-43-201-75-12.ap-northeast-2.compute.amazonaws.com:8080/postImg/${closet.images.first()}",
             contentDescription = null,
             modifier = Modifier
                 .fillMaxSize()
                 .aspectRatio(1f),
             contentScale = ContentScale.FillBounds
         )
-
     }
 }
