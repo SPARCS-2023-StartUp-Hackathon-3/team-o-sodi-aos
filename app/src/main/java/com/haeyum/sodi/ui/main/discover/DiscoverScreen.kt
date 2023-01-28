@@ -120,7 +120,9 @@ fun DiscoverScreen(viewModel: DiscoverViewModel = hiltViewModel(), modifier: Mod
                                 Intent(
                                     context,
                                     ProductDetailActivity::class.java
-                                )
+                                ).apply {
+                                    putExtra("storeId", it)
+                                }
                             )
                         }
                         Column(modifier = Modifier.padding(horizontal = 18.dp)) {

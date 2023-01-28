@@ -46,22 +46,32 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
+import coil.compose.AsyncImage
 import com.haeyum.sodi.R
 import com.haeyum.sodi.ui.theme.SODITheme
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalMaterialApi::class)
+@AndroidEntryPoint
 class ProductDetailActivity : ComponentActivity() {
     val viewModel by viewModels<ProductDetailViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.statusBarColor = android.graphics.Color.WHITE
+
+        intent.getStringExtra("storeId")?.let {
+            viewModel.fetchProductDetail(it)
+        } ?: finish()
+
         setContent {
             SODITheme {
                 val bottomSheetState =
                     rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+
+                val productDetail by viewModel.productResponse.collectAsState()
 
                 ModalBottomSheetLayout(
                     sheetContent = {
@@ -84,13 +94,13 @@ class ProductDetailActivity : ComponentActivity() {
                             )
                             Spacer(modifier = Modifier.size(24.dp))
                             Text(
-                                text = "GDSC 패션 후드티",
+                                text = productDetail?.product ?: "-",
                                 color = Color.Black,
                                 fontSize = 24.sp,
                                 fontWeight = FontWeight.Bold
                             )
                             Text(
-                                text = "HAEYUM | 63,500원",
+                                text = "${productDetail?.brand ?: "-"} | ${productDetail?.price ?: "-"}",
                                 color = Color.Black,
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.Bold
@@ -127,13 +137,13 @@ class ProductDetailActivity : ComponentActivity() {
                             )
                         }
 
-                        Image(
-                            painter = painterResource(id = R.drawable.ic_launcher_background),
+                        AsyncImage(
+                            model = "http://ec2-43-201-75-12.ap-northeast-2.compute.amazonaws.com:8080/postImg/${productDetail?.images?.firstOrNull()}",
                             contentDescription = null,
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .weight(1f),
-                            contentScale = ContentScale.FillBounds
+                            contentScale = ContentScale.Fit
                         )
 
                         Column(
@@ -141,14 +151,14 @@ class ProductDetailActivity : ComponentActivity() {
                                 .fillMaxWidth()
                                 .padding(12.dp)
                         ) {
-                            Text(text = "HAEYUM", fontWeight = FontWeight.Medium)
+                            Text(text = "${productDetail?.brand}", fontWeight = FontWeight.Medium)
                             Text(
-                                text = "GDSC 패션 후드티",
+                                text = productDetail?.product ?: "-",
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Medium,
                             )
                             Text(
-                                text = "63,500원",
+                                text = productDetail?.price ?: "-",
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.Bold,
                             )
