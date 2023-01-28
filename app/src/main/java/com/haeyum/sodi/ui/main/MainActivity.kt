@@ -9,7 +9,8 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.AddBox
+import androidx.compose.material.icons.outlined.AccountCircle
+import androidx.compose.material.icons.outlined.AddCircleOutline
 import androidx.compose.material.icons.outlined.DoorFront
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material3.Icon
@@ -19,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.core.view.WindowCompat
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.haeyum.sodi.ui.main.discover.DiscoverScreen
+import com.haeyum.sodi.ui.main.profile.ProfileScreen
 import com.haeyum.sodi.ui.theme.SODITheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -33,7 +35,8 @@ class MainActivity : ComponentActivity() {
                 val systemUiController = rememberSystemUiController()
 
                 Column(modifier = Modifier.fillMaxSize().navigationBarsPadding()) {
-                    DiscoverScreen(modifier = Modifier.weight(1f))
+//                    DiscoverScreen(modifier = Modifier.weight(1f))
+                    ProfileScreen(modifier = Modifier.weight(1f))
 
                     BottomNavigation(backgroundColor = Color.White) {
                         BottomNavigationItem(
@@ -52,8 +55,8 @@ class MainActivity : ComponentActivity() {
                             onClick = { /*TODO*/ },
                             icon = {
                                 Icon(
-                                    imageVector = Icons.Outlined.AddBox,
-                                    contentDescription = "Home"
+                                    imageVector = Icons.Outlined.AddCircleOutline,
+                                    contentDescription = "Profile"
                                 )
                             },
                         )
@@ -63,7 +66,17 @@ class MainActivity : ComponentActivity() {
                             icon = {
                                 Icon(
                                     imageVector = Icons.Outlined.DoorFront,
-                                    contentDescription = "Home"
+                                    contentDescription = "Closet"
+                                )
+                            },
+                        )
+                        BottomNavigationItem(
+                            selected = true,
+                            onClick = { /*TODO*/ },
+                            icon = {
+                                Icon(
+                                    imageVector = Icons.Outlined.AccountCircle,
+                                    contentDescription = "Closet"
                                 )
                             },
                         )
