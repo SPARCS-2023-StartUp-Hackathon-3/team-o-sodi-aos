@@ -215,6 +215,12 @@ fun ClosetScreen(
             bitmap = it
         }
     }
+
+    LaunchedEffect(Unit) {
+        activityViewModel.refreshTrick.collectLatest {
+            viewModel.refreshClosets()
+        }
+    }
 }
 
 @Composable
