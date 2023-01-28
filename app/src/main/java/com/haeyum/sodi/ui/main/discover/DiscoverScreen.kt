@@ -73,11 +73,12 @@ fun DiscoverScreen(viewModel: DiscoverViewModel = hiltViewModel(), modifier: Mod
                     .verticalScroll(rememberScrollState())
                     .background(Color(0xFFFCFCFC))
             ) {
-                viewModel.discoverResponse.collectAsState().value?.forEach {
+                viewModel.discoverResponse.collectAsState().value?.drop(10)?.forEach {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(16.dp)
+                            .clip(RoundedCornerShape(12.dp))
                             .clickable {
                                 viewModel.showPopup.value = true
                             }

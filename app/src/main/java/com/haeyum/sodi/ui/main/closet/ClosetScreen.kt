@@ -1,16 +1,29 @@
+@file:OptIn(ExperimentalAnimationApi::class)
+
 package com.haeyum.sodi.ui.main.closet
 
 import android.graphics.Bitmap
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -33,13 +46,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.haeyum.sodi.R
 import com.haeyum.sodi.data.api.getCloset.Closet
+import com.haeyum.sodi.supports.noRippleClickable
 import com.haeyum.sodi.ui.main.MainViewModel
 import com.haeyum.sodi.ui.main.component.MainComponent
 import kotlinx.coroutines.flow.collectLatest
@@ -116,7 +135,9 @@ fun ClosetScreen(
                     contentPadding = PaddingValues(8.dp),
                     content = {
                         items(closets) {
-                            ClosetItem(it)
+                            ClosetItem(it) {
+                                viewModel.isShowReceipt = true
+                            }
                         }
                     },
                 )
@@ -133,18 +154,57 @@ fun ClosetScreen(
             Icon(imageVector = Icons.Default.AddAPhoto, contentDescription = null)
         }
 
-//        Box(
-//            modifier = Modifier
-//                .align(Alignment.Center)
-//                .size(300.dp)
-//                .background(brush = Brush.sweepGradient(colors)),
-//            contentAlignment = Alignment.Center
-//        ) {
-//            Image(
-//                painter = painterResource(id = R.drawable.ic_launcher_background),
-//                contentDescription = null
-//            )
-//        }
+        AnimatedVisibility(
+            visible = viewModel.isShowReceipt,
+            enter = scaleIn() + fadeIn(),
+            exit = scaleOut() + fadeOut(),
+        ) {
+            Box(
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .fillMaxSize()
+                    .background(Color(0x88000000))
+                    .noRippleClickable {
+                        viewModel.isShowReceipt = false
+                    },
+                contentAlignment = Alignment.Center
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth(.8f)
+                        .background(Color.White)
+                        .padding(horizontal = 30.dp, vertical = 28.dp)
+                ) {
+                    Text(
+                        text = "공인 영수증",
+                        modifier = Modifier.fillMaxWidth(),
+                        color = Color.Black,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Medium,
+                        textAlign = TextAlign.Center,
+                    )
+                    Spacer(modifier = Modifier.size(18.dp))
+                    ReceiptItem(key = "가격", value = "36,000원")
+                    Spacer(modifier = Modifier.size(8.dp))
+                    ReceiptItem(key = "가격", value = "36,000원")
+                    Spacer(modifier = Modifier.size(8.dp))
+                    ReceiptItem(key = "가격", value = "36,000원")
+                    Spacer(modifier = Modifier.size(24.dp))
+                    Box(
+                        modifier = Modifier
+                            .size(160.dp)
+                            .background(brush = Brush.sweepGradient(colors))
+                            .align(Alignment.CenterHorizontally),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_launcher_background),
+                            contentDescription = null
+                        )
+                    }
+                }
+            }
+        }
     }
 
     LaunchedEffect(Unit) {
@@ -154,9 +214,26 @@ fun ClosetScreen(
     }
 }
 
+@Composable
+private fun ReceiptItem(key: String, value: String) {
+    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+        Text(
+            text = key,
+            color = Color.Black,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.ExtraBold
+        )
+        Text(
+            text = value,
+            color = Color.Black,
+            fontSize = 18.sp
+        )
+    }
+}
+
 fun hello(): List<Color> {
     val colors = arrayListOf<Color>()
-    repeat(Random.nextInt(8, 24)) {
+    repeat(Random.nextInt(8, 16)) {
         val r = Random.nextFloat()
         val g = Random.nextFloat()
         val b = Random.nextFloat()
@@ -167,7 +244,7 @@ fun hello(): List<Color> {
 }
 
 @Composable
-private fun ClosetItem(closet: Closet) {
+private fun ClosetItem(closet: Closet, onShowReceipt: (String) -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -178,7 +255,10 @@ private fun ClosetItem(closet: Closet) {
             contentDescription = null,
             modifier = Modifier
                 .fillMaxSize()
-                .aspectRatio(1f),
+                .aspectRatio(1f)
+                .clickable {
+                    onShowReceipt(closet.storeId)
+                },
             contentScale = ContentScale.FillBounds
         )
     }

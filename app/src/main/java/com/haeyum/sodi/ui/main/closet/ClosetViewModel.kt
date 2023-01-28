@@ -1,6 +1,8 @@
 package com.haeyum.sodi.ui.main.closet
 
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.haeyum.sodi.data.repository.PostRepository
@@ -34,4 +36,6 @@ class ClosetViewModel @Inject constructor(postRepository: PostRepository) : View
             }
         }
     }.stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+
+    var isShowReceipt by mutableStateOf(false)
 }
