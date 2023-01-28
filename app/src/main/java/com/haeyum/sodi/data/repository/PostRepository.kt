@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 class PostRepository @Inject constructor(private val client: HttpClient) {
     suspend fun getPostList() =
-        client.get("http://ec2-43-201-75-12.ap-northeast-2.compute.amazonaws.com:8080/posts/getPost")
+        client.get("http://ec2-43-201-75-12.ap-northeast-2.compute.amazonaws.com:8080/posts/getPostDump")
             .body<List<GetPostListResponse>>()
 
     suspend fun getWearItem() {

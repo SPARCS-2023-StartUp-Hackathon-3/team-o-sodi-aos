@@ -1,5 +1,6 @@
 package com.haeyum.sodi.di
 
+import android.util.Log
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -35,11 +36,11 @@ object ApiModule {
         install(Logging) {
             logger = Logger.DEFAULT
             level = LogLevel.ALL
-//                logger = object : Logger {
-//                    override fun log(message: String) {
-//                        println(message)
-//                    }
-//                }
+                logger = object : Logger {
+                    override fun log(message: String) {
+                        Log.d("PANGMOO_KTOR", message)
+                    }
+                }
         }
     }
 }

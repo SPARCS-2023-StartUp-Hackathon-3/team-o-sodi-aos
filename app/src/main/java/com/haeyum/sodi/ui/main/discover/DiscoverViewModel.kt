@@ -1,5 +1,6 @@
 package com.haeyum.sodi.ui.main.discover
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.haeyum.sodi.data.repository.PostRepository
@@ -16,6 +17,7 @@ class DiscoverViewModel @Inject constructor(postRepository: PostRepository) : Vi
     val discoverResponse = flow {
         emit(postRepository.getPostList())
     }.catch {
+        Log.d("PANGMOO", it.toString())
         emit(emptyList())
     }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
 

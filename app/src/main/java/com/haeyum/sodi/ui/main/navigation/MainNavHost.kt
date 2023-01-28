@@ -12,12 +12,13 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
+import com.haeyum.sodi.ui.main.MainViewModel
 import com.haeyum.sodi.ui.main.closet.ClosetScreen
 import com.haeyum.sodi.ui.main.discover.DiscoverScreen
 import com.haeyum.sodi.ui.main.profile.ProfileScreen
 
 @Composable
-fun SetupMainNavGraph(navHostController: NavHostController) {
+fun SetupMainNavGraph(navHostController: NavHostController, activityViewModel: MainViewModel) {
     AnimatedNavHost(
         navController = navHostController,
         startDestination = MainNavRoute.Discover.route,
@@ -38,7 +39,7 @@ fun SetupMainNavGraph(navHostController: NavHostController) {
         }
 
         composable(route = MainNavRoute.Closet.route) {
-            ClosetScreen(modifier = Modifier.fillMaxSize())
+            ClosetScreen(activityViewModel = activityViewModel, modifier = Modifier.fillMaxSize())
         }
 
         composable(

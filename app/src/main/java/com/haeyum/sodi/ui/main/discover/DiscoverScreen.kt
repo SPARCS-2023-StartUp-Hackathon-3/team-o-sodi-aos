@@ -54,6 +54,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.haeyum.sodi.R
+import com.haeyum.sodi.data.api.getPost.WearTag
 import com.haeyum.sodi.ui.main.productDetail.ProductDetailActivity
 
 @Composable
@@ -96,10 +97,10 @@ fun DiscoverScreen(viewModel: DiscoverViewModel = hiltViewModel(), modifier: Mod
                         val context = LocalContext.current
 
                         Column(modifier = Modifier.padding(horizontal = 18.dp)) {
-                            WriterProfile(it.userName, it.date)
+                            WriterProfile(it.post.userName, it.post.date)
                             Spacer(modifier = Modifier.size(18.dp))
                             Row(modifier = Modifier.fillMaxWidth()) {
-                                it.images.firstOrNull()?.let {
+                                it.post.images.firstOrNull()?.let {
                                     AsyncImage(
                                         model = "http://ec2-43-201-75-12.ap-northeast-2.compute.amazonaws.com:8080/postImg/$it",
                                         contentDescription = null,
@@ -114,7 +115,7 @@ fun DiscoverScreen(viewModel: DiscoverViewModel = hiltViewModel(), modifier: Mod
                                 )
                             }
                         }
-                        EquipItems(it.postId, it.wearTag) {
+                        EquipItems(wearTags = it.wearTags) {
                             context.startActivity(
                                 Intent(
                                     context,
@@ -143,7 +144,7 @@ fun DiscoverScreen(viewModel: DiscoverViewModel = hiltViewModel(), modifier: Mod
                                         )
                                     }
                                     Text(
-                                        text = it.likes.size.toString(),
+                                        text = it.post.likes.size.toString(),
                                         modifier = Modifier.offset(x = (-6).dp),
                                         fontSize = 14.sp,
                                         fontWeight = FontWeight.Medium
@@ -157,14 +158,14 @@ fun DiscoverScreen(viewModel: DiscoverViewModel = hiltViewModel(), modifier: Mod
                                         )
                                     }
                                     Text(
-                                        text = it.comments.size.toString(),
+                                        text = it.post.comments.size.toString(),
                                         modifier = Modifier.offset(x = (-6).dp),
                                         fontSize = 14.sp,
                                         fontWeight = FontWeight.Medium
                                     )
                                 }
                             }
-                            Description(text = it.description)
+                            Description(text = it.post.description)
                         }
                     }
                 }
@@ -236,7 +237,7 @@ private fun Description(text: String) {
 }
 
 @Composable
-private fun EquipItems(postId: String, wearTag: List<String>, onClick: (String) -> Unit) {
+private fun EquipItems(wearTags: List<WearTag>, onClick: (String) -> Unit) {
     Row(
         modifier = Modifier
             .padding(top = 18.dp, bottom = 0.dp)
@@ -244,19 +245,19 @@ private fun EquipItems(postId: String, wearTag: List<String>, onClick: (String) 
             .horizontalScroll(rememberScrollState()),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        wearTag.forEachIndexed { index, id ->
+        wearTags.forEachIndexed { index, wearTag ->
             if (index == 0)
                 Spacer(modifier = Modifier.size(8.dp))
 
             Button(
-                onClick = { onClick(id) },
+                onClick = { onClick(wearTag.storeId) },
                 modifier = Modifier.size(64.dp),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0x88C2B7EF)),
                 contentPadding = PaddingValues(0.dp)
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.logo_black),
+                AsyncImage(
+                    model = "http://ec2-43-201-75-12.ap-northeast-2.compute.amazonaws.com:8080/postImg/${wearTag.images.first()}",
                     contentDescription = null,
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Fit
