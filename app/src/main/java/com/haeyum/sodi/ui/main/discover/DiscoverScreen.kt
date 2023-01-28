@@ -41,19 +41,18 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.haeyum.sodi.R
 
 @Composable
-fun DiscoverScreen() {
+fun DiscoverScreen(viewModel: DiscoverViewModel = hiltViewModel(), modifier: Modifier = Modifier) {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = modifier
             .background(Color.White)
             .statusBarsPadding()
             .navigationBarsPadding()
     ) {
         Header()
-
         Column(
             modifier = Modifier
                 .weight(1f)
@@ -100,7 +99,10 @@ fun DiscoverScreen() {
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Row(verticalAlignment = Alignment.CenterVertically) {
-                                IconButton(onClick = { /*TODO*/ }, modifier = Modifier.padding(0.dp)) {
+                                IconButton(
+                                    onClick = { /*TODO*/ },
+                                    modifier = Modifier.padding(0.dp)
+                                ) {
                                     Icon(
                                         imageVector = Icons.Outlined.FavoriteBorder,
                                         contentDescription = "favorite"
