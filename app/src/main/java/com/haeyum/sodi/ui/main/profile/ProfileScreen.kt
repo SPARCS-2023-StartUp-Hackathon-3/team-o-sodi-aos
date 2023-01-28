@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -14,27 +13,19 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Album
-import androidx.compose.material.icons.outlined.Block
-import androidx.compose.material.icons.outlined.BorderOuter
-import androidx.compose.material.icons.outlined.BrowseGallery
-import androidx.compose.material.icons.outlined.DoorFront
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.GridView
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -124,16 +115,24 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(), modifier: Modif
             Spacer(modifier = Modifier.size(36.dp))
         }
 
+        val selectedTabIndex = viewModel.selectedTabIndex.collectAsState().value
+
         Divider(color = Color(0xFFEFEFEF), thickness = (1.5).dp)
-        TabRow(selectedTabIndex = 0) {
-            Tab(selected = true, onClick = { /*TODO*/ }) {
+        TabRow(selectedTabIndex = selectedTabIndex) {
+            Tab(
+                selected = true,
+                onClick = { viewModel.selectedTabIndex.value = 0 },
+            ) {
                 Icon(
                     imageVector = Icons.Outlined.GridView,
                     contentDescription = "Posts",
                     modifier = Modifier.padding(12.dp)
                 )
             }
-            Tab(selected = false, onClick = { /*TODO*/ }) {
+            Tab(
+                selected = false,
+                onClick = { viewModel.selectedTabIndex.value = 1 },
+            ) {
                 Icon(
                     imageVector = Icons.Outlined.FavoriteBorder,
                     contentDescription = "Favorites",
@@ -142,37 +141,77 @@ fun ProfileScreen(viewModel: ProfileViewModel = hiltViewModel(), modifier: Modif
             }
         }
 
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(3),
-            modifier = Modifier
-                .weight(1f)
-                .background(Color(0xFFEFEFEF))
-                .padding(horizontal = 8.dp),
-            content = {
-                items(99) {
-                    Image(
-                        painter = painterResource(id = R.drawable.logo_black),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(8.dp))
-                            .padding(top = 8.dp)
-                            .then(
-                                when {
-                                    it % 3 == 0 -> Modifier.padding(end = 4.dp)
-                                    it % 3 == 1 -> Modifier.padding(horizontal = 4.dp)
-                                    else -> Modifier.padding(start = 4.dp)
-                                }
-                            )
-                            .size(120.dp)
-//                            .weight(1f)
-                    )
-                }
-                item {
-                    Spacer(modifier = Modifier.size(8.dp))
-                }
-            },
-        )
+        when (selectedTabIndex) {
+            0 -> PostTabContent(modifier = Modifier.weight(1f))
+            1 -> FavoriteTabContent(modifier = Modifier.weight(1f))
+        }
     }
+}
+
+@Composable
+private fun PostTabContent(modifier: Modifier = Modifier) {
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(3),
+        modifier = modifier
+            .background(Color(0xFFEFEFEF))
+            .padding(horizontal = 8.dp),
+        content = {
+            items(24) {
+                Image(
+                    painter = painterResource(id = R.drawable.logo_black),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(8.dp))
+                        .padding(top = 8.dp)
+                        .then(
+                            when {
+                                it % 3 == 0 -> Modifier.padding(end = 4.dp)
+                                it % 3 == 1 -> Modifier.padding(horizontal = 4.dp)
+                                else -> Modifier.padding(start = 4.dp)
+                            }
+                        )
+                        .size(120.dp)
+//                            .weight(1f)
+                )
+            }
+            item {
+                Spacer(modifier = Modifier.size(8.dp))
+            }
+        },
+    )
+}
+
+@Composable
+private fun FavoriteTabContent(modifier: Modifier = Modifier) {
+    LazyVerticalGrid(
+        columns = GridCells.Fixed(3),
+        modifier = modifier
+            .background(Color(0xFFEFEFEF))
+            .padding(horizontal = 8.dp),
+        content = {
+            items(24) {
+                Image(
+                    painter = painterResource(id = R.drawable.logo_white),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(8.dp))
+                        .padding(top = 8.dp)
+                        .then(
+                            when {
+                                it % 3 == 0 -> Modifier.padding(end = 4.dp)
+                                it % 3 == 1 -> Modifier.padding(horizontal = 4.dp)
+                                else -> Modifier.padding(start = 4.dp)
+                            }
+                        )
+                        .size(120.dp)
+//                            .weight(1f)
+                )
+            }
+            item {
+                Spacer(modifier = Modifier.size(8.dp))
+            }
+        },
+    )
 }
 
 @Composable
