@@ -35,6 +35,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -51,6 +52,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
 import com.haeyum.sodi.R
 import com.haeyum.sodi.ui.main.productDetail.ProductDetailActivity
 
@@ -70,7 +72,7 @@ fun DiscoverScreen(viewModel: DiscoverViewModel = hiltViewModel(), modifier: Mod
                     .verticalScroll(rememberScrollState())
                     .background(Color(0xFFFCFCFC))
             ) {
-                repeat(15) {
+                viewModel.discoverResponse.collectAsState().value?.forEach {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -94,10 +96,17 @@ fun DiscoverScreen(viewModel: DiscoverViewModel = hiltViewModel(), modifier: Mod
                         val context = LocalContext.current
 
                         Column(modifier = Modifier.padding(horizontal = 18.dp)) {
-                            WriterProfile()
+                            WriterProfile(it.userName, it.date)
                             Spacer(modifier = Modifier.size(18.dp))
                             Row(modifier = Modifier.fillMaxWidth()) {
-                                Image(
+                                it.images.firstOrNull()?.let {
+                                    AsyncImage(
+                                        model = "http://ec2-43-201-75-12.ap-northeast-2.compute.amazonaws.com:8080/postImg/$it",
+                                        contentDescription = null,
+                                        modifier = Modifier.size(300.dp),
+                                        contentScale = ContentScale.FillWidth
+                                    )
+                                } ?: Image(
                                     painter = painterResource(id = R.drawable.ic_launcher_background),
                                     contentDescription = null,
                                     modifier = Modifier.weight(1f),
@@ -134,7 +143,7 @@ fun DiscoverScreen(viewModel: DiscoverViewModel = hiltViewModel(), modifier: Mod
                                         )
                                     }
                                     Text(
-                                        text = "1.2K",
+                                        text = it.likes.size.toString(),
                                         modifier = Modifier.offset(x = (-6).dp),
                                         fontSize = 14.sp,
                                         fontWeight = FontWeight.Medium
@@ -148,24 +157,113 @@ fun DiscoverScreen(viewModel: DiscoverViewModel = hiltViewModel(), modifier: Mod
                                         )
                                     }
                                     Text(
-                                        text = "525",
+                                        text = it.comments.size.toString(),
                                         modifier = Modifier.offset(x = (-6).dp),
                                         fontSize = 14.sp,
                                         fontWeight = FontWeight.Medium
                                     )
                                 }
                             }
-                            Description()
+                            Description(text = it.description)
                         }
                     }
                 }
+//                repeat(15) {
+//                    Column(
+//                        modifier = Modifier
+//                            .fillMaxWidth()
+//                            .padding(16.dp)
+//                            .clickable {
+//                                viewModel.showPopup.value = true
+//                            }
+//                            .shadow(
+//                                elevation = 6.dp,
+//                                shape = RoundedCornerShape(12.dp),
+//                                spotColor = Color(0xFF8973D8)
+//                            )
+//                            .background(color = Color.White, shape = RoundedCornerShape(12.dp))
+//                            .border(
+//                                width = (1).dp,
+//                                color = Color(0xFFEFEFEF),
+//                                shape = RoundedCornerShape(12.dp)
+//                            )
+//                            .padding(vertical = 18.dp)
+//                    ) {
+//                        val context = LocalContext.current
+//
+//                        Column(modifier = Modifier.padding(horizontal = 18.dp)) {
+//                            WriterProfile()
+//                            Spacer(modifier = Modifier.size(18.dp))
+//                            Row(modifier = Modifier.fillMaxWidth()) {
+//                                Image(
+//                                    painter = painterResource(id = R.drawable.ic_launcher_background),
+//                                    contentDescription = null,
+//                                    modifier = Modifier.weight(1f),
+//                                    contentScale = ContentScale.FillWidth
+//                                )
+//                            }
+//                        }
+//                        EquipItems {
+//                            context.startActivity(
+//                                Intent(
+//                                    context,
+//                                    ProductDetailActivity::class.java
+//                                )
+//                            )
+//                        }
+//                        Column(modifier = Modifier.padding(horizontal = 18.dp)) {
+//                            Row(
+//                                modifier = Modifier
+//                                    .fillMaxWidth()
+//                                    .offset(x = (-12).dp),
+//                                horizontalArrangement = Arrangement.spacedBy((0).dp),
+//                                verticalAlignment = Alignment.CenterVertically
+//                            ) {
+//                                Row(verticalAlignment = Alignment.CenterVertically) {
+//                                    var isFavorite by remember { mutableStateOf(false) }
+//
+//                                    IconButton(
+//                                        onClick = { isFavorite = !isFavorite },
+//                                        modifier = Modifier.padding(0.dp)
+//                                    ) {
+//                                        Icon(
+//                                            imageVector = if (isFavorite) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
+//                                            contentDescription = "favorite"
+//                                        )
+//                                    }
+//                                    Text(
+//                                        text = "1.2K",
+//                                        modifier = Modifier.offset(x = (-6).dp),
+//                                        fontSize = 14.sp,
+//                                        fontWeight = FontWeight.Medium
+//                                    )
+//                                }
+//                                Row(verticalAlignment = Alignment.CenterVertically) {
+//                                    IconButton(onClick = { /*TODO*/ }) {
+//                                        Icon(
+//                                            imageVector = Icons.Outlined.Comment,
+//                                            contentDescription = "comment"
+//                                        )
+//                                    }
+//                                    Text(
+//                                        text = "525",
+//                                        modifier = Modifier.offset(x = (-6).dp),
+//                                        fontSize = 14.sp,
+//                                        fontWeight = FontWeight.Medium
+//                                    )
+//                                }
+//                            }
+//                            Description()
+//                        }
+//                    }
+//                }
             }
         }
     }
 }
 
 @Composable
-private fun WriterProfile() {
+private fun WriterProfile(username: String, date: String) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
@@ -180,13 +278,13 @@ private fun WriterProfile() {
         Spacer(modifier = Modifier.width(12.dp))
         Column {
             Text(
-                text = "PangMoo",
+                text = username,
                 color = Color.Black,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.ExtraBold
             )
             Text(
-                text = "2021.08.01",
+                text = date,
                 color = Color.DarkGray,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Light
@@ -216,9 +314,9 @@ private fun Header() {
 }
 
 @Composable
-private fun Description() {
+private fun Description(text: String) {
     Text(
-        text = "죽음의 한기 속에서 해커톤을 하는 당신, 이런 당신을 위한 코디입니다. 따뜻한 기모가 당신을 지켜줍니다.",
+        text = text,
         color = Color.Black,
         fontSize = 12.sp,
         fontWeight = FontWeight.Light,
