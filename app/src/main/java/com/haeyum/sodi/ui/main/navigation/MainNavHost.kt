@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
+import com.haeyum.sodi.ui.main.closet.ClosetScreen
 import com.haeyum.sodi.ui.main.discover.DiscoverScreen
 import com.haeyum.sodi.ui.main.profile.ProfileScreen
 
@@ -33,7 +34,11 @@ fun SetupMainNavGraph(navHostController: NavHostController) {
             route = MainNavRoute.Write.route,
         ) {
             // WriteScreen()
-            ProfileScreen(modifier = Modifier.fillMaxSize())
+//            ProfileScreen(modifier = Modifier.fillMaxSize())
+        }
+
+        composable(route = MainNavRoute.Closet.route) {
+            ClosetScreen(modifier = Modifier.fillMaxSize())
         }
 
         composable(

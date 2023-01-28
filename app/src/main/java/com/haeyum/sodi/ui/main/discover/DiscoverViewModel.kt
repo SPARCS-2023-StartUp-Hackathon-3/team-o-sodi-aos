@@ -6,6 +6,7 @@ import com.haeyum.sodi.data.repository.PostRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
@@ -14,6 +15,8 @@ import javax.inject.Inject
 class DiscoverViewModel @Inject constructor(postRepository: PostRepository) : ViewModel() {
     val discoverResponse = flow {
         emit(postRepository.getPostList())
+    }.catch {
+        emit(emptyList())
     }.stateIn(viewModelScope, SharingStarted.Eagerly, null)
 
     val showPopup = MutableStateFlow(false)

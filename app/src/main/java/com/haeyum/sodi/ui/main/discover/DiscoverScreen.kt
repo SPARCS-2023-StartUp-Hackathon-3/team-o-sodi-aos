@@ -114,7 +114,7 @@ fun DiscoverScreen(viewModel: DiscoverViewModel = hiltViewModel(), modifier: Mod
                                 )
                             }
                         }
-                        EquipItems {
+                        EquipItems(it.postId, it.wearTag) {
                             context.startActivity(
                                 Intent(
                                     context,
@@ -168,95 +168,6 @@ fun DiscoverScreen(viewModel: DiscoverViewModel = hiltViewModel(), modifier: Mod
                         }
                     }
                 }
-//                repeat(15) {
-//                    Column(
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .padding(16.dp)
-//                            .clickable {
-//                                viewModel.showPopup.value = true
-//                            }
-//                            .shadow(
-//                                elevation = 6.dp,
-//                                shape = RoundedCornerShape(12.dp),
-//                                spotColor = Color(0xFF8973D8)
-//                            )
-//                            .background(color = Color.White, shape = RoundedCornerShape(12.dp))
-//                            .border(
-//                                width = (1).dp,
-//                                color = Color(0xFFEFEFEF),
-//                                shape = RoundedCornerShape(12.dp)
-//                            )
-//                            .padding(vertical = 18.dp)
-//                    ) {
-//                        val context = LocalContext.current
-//
-//                        Column(modifier = Modifier.padding(horizontal = 18.dp)) {
-//                            WriterProfile()
-//                            Spacer(modifier = Modifier.size(18.dp))
-//                            Row(modifier = Modifier.fillMaxWidth()) {
-//                                Image(
-//                                    painter = painterResource(id = R.drawable.ic_launcher_background),
-//                                    contentDescription = null,
-//                                    modifier = Modifier.weight(1f),
-//                                    contentScale = ContentScale.FillWidth
-//                                )
-//                            }
-//                        }
-//                        EquipItems {
-//                            context.startActivity(
-//                                Intent(
-//                                    context,
-//                                    ProductDetailActivity::class.java
-//                                )
-//                            )
-//                        }
-//                        Column(modifier = Modifier.padding(horizontal = 18.dp)) {
-//                            Row(
-//                                modifier = Modifier
-//                                    .fillMaxWidth()
-//                                    .offset(x = (-12).dp),
-//                                horizontalArrangement = Arrangement.spacedBy((0).dp),
-//                                verticalAlignment = Alignment.CenterVertically
-//                            ) {
-//                                Row(verticalAlignment = Alignment.CenterVertically) {
-//                                    var isFavorite by remember { mutableStateOf(false) }
-//
-//                                    IconButton(
-//                                        onClick = { isFavorite = !isFavorite },
-//                                        modifier = Modifier.padding(0.dp)
-//                                    ) {
-//                                        Icon(
-//                                            imageVector = if (isFavorite) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
-//                                            contentDescription = "favorite"
-//                                        )
-//                                    }
-//                                    Text(
-//                                        text = "1.2K",
-//                                        modifier = Modifier.offset(x = (-6).dp),
-//                                        fontSize = 14.sp,
-//                                        fontWeight = FontWeight.Medium
-//                                    )
-//                                }
-//                                Row(verticalAlignment = Alignment.CenterVertically) {
-//                                    IconButton(onClick = { /*TODO*/ }) {
-//                                        Icon(
-//                                            imageVector = Icons.Outlined.Comment,
-//                                            contentDescription = "comment"
-//                                        )
-//                                    }
-//                                    Text(
-//                                        text = "525",
-//                                        modifier = Modifier.offset(x = (-6).dp),
-//                                        fontSize = 14.sp,
-//                                        fontWeight = FontWeight.Medium
-//                                    )
-//                                }
-//                            }
-//                            Description()
-//                        }
-//                    }
-//                }
             }
         }
     }
@@ -325,7 +236,7 @@ private fun Description(text: String) {
 }
 
 @Composable
-private fun EquipItems(onClick: () -> Unit) {
+private fun EquipItems(postId: String, wearTag: List<String>, onClick: (String) -> Unit) {
     Row(
         modifier = Modifier
             .padding(top = 18.dp, bottom = 0.dp)
@@ -333,12 +244,12 @@ private fun EquipItems(onClick: () -> Unit) {
             .horizontalScroll(rememberScrollState()),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        repeat(8) {
-            if (it == 0)
+        wearTag.forEachIndexed { index, id ->
+            if (index == 0)
                 Spacer(modifier = Modifier.size(8.dp))
 
             Button(
-                onClick = onClick,
+                onClick = { onClick(id) },
                 modifier = Modifier.size(64.dp),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0x88C2B7EF)),
@@ -352,7 +263,7 @@ private fun EquipItems(onClick: () -> Unit) {
                 )
             }
 
-            if (it == 7)
+            if (index == 7)
                 Spacer(modifier = Modifier.size(8.dp))
         }
     }
