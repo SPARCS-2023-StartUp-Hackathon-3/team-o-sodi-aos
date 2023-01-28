@@ -76,6 +76,7 @@ fun ClosetScreen(
     val colors = remember {
         hello()
     }
+    val showReceipt by viewModel.showReceipt.collectAsState()
 
     Box(
         modifier = modifier
@@ -135,8 +136,11 @@ fun ClosetScreen(
                     contentPadding = PaddingValues(8.dp),
                     content = {
                         items(closets) {
-                            ClosetItem(it) {
-                                viewModel.isShowReceipt = true
+                            ClosetItem(it) { id ->
+                                if (it.purchase) {
+                                    viewModel.showReceipt.value =
+                                        viewModel.receipts.value.first { it.storeId == id }
+                                }
                             }
                         }
                     },
@@ -155,7 +159,7 @@ fun ClosetScreen(
         }
 
         AnimatedVisibility(
-            visible = viewModel.isShowReceipt,
+            visible = showReceipt != null,
             enter = scaleIn() + fadeIn(),
             exit = scaleOut() + fadeOut(),
         ) {
@@ -165,7 +169,7 @@ fun ClosetScreen(
                     .fillMaxSize()
                     .background(Color(0x88000000))
                     .noRippleClickable {
-                        viewModel.isShowReceipt = false
+                        viewModel.showReceipt.value = null
                     },
                 contentAlignment = Alignment.Center
             ) {
@@ -184,21 +188,20 @@ fun ClosetScreen(
                         textAlign = TextAlign.Center,
                     )
                     Spacer(modifier = Modifier.size(18.dp))
-                    ReceiptItem(key = "가격", value = "36,000원")
+                    ReceiptItem(key = "이름", value = showReceipt?.product ?: "-")
                     Spacer(modifier = Modifier.size(8.dp))
-                    ReceiptItem(key = "가격", value = "36,000원")
+                    ReceiptItem(key = "날짜", value = showReceipt?.date ?: "-")
                     Spacer(modifier = Modifier.size(8.dp))
-                    ReceiptItem(key = "가격", value = "36,000원")
+                    ReceiptItem(key = "가격", value = showReceipt?.price ?: "-")
                     Spacer(modifier = Modifier.size(24.dp))
                     Box(
                         modifier = Modifier
                             .size(160.dp)
-                            .background(brush = Brush.sweepGradient(colors))
                             .align(Alignment.CenterHorizontally),
                         contentAlignment = Alignment.Center
                     ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.ic_launcher_background),
+                        AsyncImage(
+                            model = "http://ec2-43-201-75-12.ap-northeast-2.compute.amazonaws.com:8080/postImg/${showReceipt?.images?.first()}",
                             contentDescription = null
                         )
                     }
@@ -216,7 +219,7 @@ fun ClosetScreen(
 
 @Composable
 private fun ReceiptItem(key: String, value: String) {
-    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         Text(
             text = key,
             color = Color.Black,

@@ -2,6 +2,7 @@ package com.haeyum.sodi.data.repository
 
 import com.haeyum.sodi.data.api.getCloset.GetClosetResponse
 import com.haeyum.sodi.data.api.getPost.GetPostListResponse
+import com.haeyum.sodi.data.api.getPurchase.GetPurchaseResponse
 import com.haeyum.sodi.data.api.getSpecificStore.GetSpecificStoreResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -23,4 +24,8 @@ class PostRepository @Inject constructor(private val client: HttpClient) {
         client.get("http://ec2-43-201-75-12.ap-northeast-2.compute.amazonaws.com:8080/loginRouter/getProfile?") {
             parameter("userName", "HongGilDong")
         }.body<GetClosetResponse>()
+
+    suspend fun getPurchase() = client.get("http://ec2-43-201-75-12.ap-northeast-2.compute.amazonaws.com:8080/purchase/myPurchase") {
+        parameter("userName", "HongGilDong")
+    }.body<List<GetPurchaseResponse>>()
 }

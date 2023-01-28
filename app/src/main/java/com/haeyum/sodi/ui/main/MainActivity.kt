@@ -101,37 +101,6 @@ class MainActivity : ComponentActivity() {
                             }
                         )
                         BottomNavigationItem(
-                            selected = false,
-                            onClick = {
-                                startActivity(Intent(this@MainActivity, WriteActivity::class.java))
-                            },
-                            icon = {
-                                Icon(
-                                    imageVector = Icons.Outlined.AddCircleOutline,
-                                    contentDescription = "Write",
-                                    tint = if (currentRoute == MainNavRoute.Write) Color(0xFF8973D8) else Color(
-                                        0xFFBDBDBD
-                                    )
-                                )
-                            },
-                        )
-                        BottomNavigationItem(
-                            selected = true,
-                            onClick = {
-                                viewModel.screenState.value = MainNavRoute.Closet
-                                navController.safeNavigate(MainNavRoute.Closet.route)
-                            },
-                            icon = {
-                                Icon(
-                                    imageVector = Icons.Outlined.DoorFront,
-                                    contentDescription = "com.haeyum.sodi.data.api.getCloset.Closet",
-                                    tint = if (currentRoute == MainNavRoute.Closet) Color(0xFF8973D8) else Color(
-                                        0xFFBDBDBD
-                                    )
-                                )
-                            },
-                        )
-                        BottomNavigationItem(
                             selected = true,
                             onClick = {
                                 viewModel.screenState.value = MainNavRoute.Profile
@@ -144,6 +113,22 @@ class MainActivity : ComponentActivity() {
                                     tint = if (currentRoute == MainNavRoute.Profile) Color(
                                         0xFF8973D8
                                     ) else Color(0xFFBDBDBD)
+                                )
+                            },
+                        )
+                        BottomNavigationItem(
+                            selected = true,
+                            onClick = {
+                                viewModel.screenState.value = MainNavRoute.Closet
+                                navController.safeNavigate(MainNavRoute.Closet.route)
+                            },
+                            icon = {
+                                Icon(
+                                    imageVector = Icons.Outlined.DoorFront,
+                                    contentDescription = "Closet",
+                                    tint = if (currentRoute == MainNavRoute.Closet) Color(0xFF8973D8) else Color(
+                                        0xFFBDBDBD
+                                    )
                                 )
                             },
                         )
