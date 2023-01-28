@@ -1,5 +1,6 @@
 package com.haeyum.sodi.ui.main
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -28,6 +29,7 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.haeyum.sodi.supports.safeNavigate
 import com.haeyum.sodi.ui.main.navigation.MainNavRoute
 import com.haeyum.sodi.ui.main.navigation.SetupMainNavGraph
+import com.haeyum.sodi.ui.main.write.WriteActivity
 import com.haeyum.sodi.ui.theme.SODITheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -79,8 +81,7 @@ class MainActivity : ComponentActivity() {
                         BottomNavigationItem(
                             selected = false,
                             onClick = {
-                                viewModel.screenState.value = MainNavRoute.Write
-                                navController.safeNavigate(MainNavRoute.Write.route)
+                                startActivity(Intent(this@MainActivity, WriteActivity::class.java))
                             },
                             icon = {
                                 Icon(

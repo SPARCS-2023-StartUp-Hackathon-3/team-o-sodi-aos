@@ -1,10 +1,13 @@
 package com.haeyum.sodi.ui.main.discover
 
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -37,100 +40,111 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.haeyum.sodi.R
+import com.haeyum.sodi.ui.main.productDetail.ProductDetailActivity
 
 @Composable
 fun DiscoverScreen(viewModel: DiscoverViewModel = hiltViewModel(), modifier: Modifier = Modifier) {
-    Column(
+    Box(
         modifier = modifier
             .background(Color.White)
             .statusBarsPadding()
             .navigationBarsPadding()
     ) {
-        Header()
-        Column(
-            modifier = Modifier
-                .weight(1f)
-                .verticalScroll(rememberScrollState())
-                .background(Color(0xFFFCFCFC))
-        ) {
-            repeat(15) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                        .shadow(
-                            elevation = 6.dp,
-                            shape = RoundedCornerShape(12.dp),
-                            spotColor = Color(0xFF8973D8)
-                        )
-                        .background(color = Color.White, shape = RoundedCornerShape(12.dp))
-                        .border(
-                            width = (1).dp,
-                            color = Color(0xFFEFEFEF),
-                            shape = RoundedCornerShape(12.dp)
-                        )
-                        .padding(vertical = 18.dp)
-                ) {
-                    Column(modifier = Modifier.padding(horizontal = 18.dp)) {
-                        WriterProfile()
-                        Spacer(modifier = Modifier.size(18.dp))
-                        Row(modifier = Modifier.fillMaxWidth()) {
-                            Image(
-                                painter = painterResource(id = R.drawable.ic_launcher_background),
-                                contentDescription = null,
-                                modifier = Modifier.weight(1f),
-                                contentScale = ContentScale.FillWidth
+        Column(modifier = Modifier.fillMaxSize()) {
+            Header()
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .verticalScroll(rememberScrollState())
+                    .background(Color(0xFFFCFCFC))
+            ) {
+                repeat(15) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                            .clickable {
+                                viewModel.showPopup.value = true
+                            }
+                            .shadow(
+                                elevation = 6.dp,
+                                shape = RoundedCornerShape(12.dp),
+                                spotColor = Color(0xFF8973D8)
                             )
-                        }
-                    }
-                    EquipItems()
-                    Column(modifier = Modifier.padding(horizontal = 18.dp)) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .offset(x = (-12).dp),
-                            horizontalArrangement = Arrangement.spacedBy((0).dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                IconButton(
-                                    onClick = { /*TODO*/ },
-                                    modifier = Modifier.padding(0.dp)
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Outlined.FavoriteBorder,
-                                        contentDescription = "favorite"
-                                    )
-                                }
-                                Text(
-                                    text = "1.2K",
-                                    modifier = Modifier.offset(x = (-6).dp),
-                                    fontSize = 14.sp,
-                                    fontWeight = FontWeight.Medium
-                                )
-                            }
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                IconButton(onClick = { /*TODO*/ }) {
-                                    Icon(
-                                        imageVector = Icons.Outlined.Comment,
-                                        contentDescription = "comment"
-                                    )
-                                }
-                                Text(
-                                    text = "525",
-                                    modifier = Modifier.offset(x = (-6).dp),
-                                    fontSize = 14.sp,
-                                    fontWeight = FontWeight.Medium
+                            .background(color = Color.White, shape = RoundedCornerShape(12.dp))
+                            .border(
+                                width = (1).dp,
+                                color = Color(0xFFEFEFEF),
+                                shape = RoundedCornerShape(12.dp)
+                            )
+                            .padding(vertical = 18.dp)
+                    ) {
+                        val context = LocalContext.current
+
+                        Column(modifier = Modifier.padding(horizontal = 18.dp)) {
+                            WriterProfile()
+                            Spacer(modifier = Modifier.size(18.dp))
+                            Row(modifier = Modifier.fillMaxWidth()) {
+                                Image(
+                                    painter = painterResource(id = R.drawable.ic_launcher_background),
+                                    contentDescription = null,
+                                    modifier = Modifier.weight(1f),
+                                    contentScale = ContentScale.FillWidth
                                 )
                             }
                         }
-                        Description()
+                        EquipItems {
+                            context.startActivity(Intent(context, ProductDetailActivity::class.java))
+                        }
+                        Column(modifier = Modifier.padding(horizontal = 18.dp)) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .offset(x = (-12).dp),
+                                horizontalArrangement = Arrangement.spacedBy((0).dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    IconButton(
+                                        onClick = { /*TODO*/ },
+                                        modifier = Modifier.padding(0.dp)
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Outlined.FavoriteBorder,
+                                            contentDescription = "favorite"
+                                        )
+                                    }
+                                    Text(
+                                        text = "1.2K",
+                                        modifier = Modifier.offset(x = (-6).dp),
+                                        fontSize = 14.sp,
+                                        fontWeight = FontWeight.Medium
+                                    )
+                                }
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    IconButton(onClick = { /*TODO*/ }) {
+                                        Icon(
+                                            imageVector = Icons.Outlined.Comment,
+                                            contentDescription = "comment"
+                                        )
+                                    }
+                                    Text(
+                                        text = "525",
+                                        modifier = Modifier.offset(x = (-6).dp),
+                                        fontSize = 14.sp,
+                                        fontWeight = FontWeight.Medium
+                                    )
+                                }
+                            }
+                            Description()
+                        }
                     }
                 }
             }
@@ -201,7 +215,7 @@ private fun Description() {
 }
 
 @Composable
-private fun EquipItems() {
+private fun EquipItems(onClick: () -> Unit) {
     Row(
         modifier = Modifier
             .padding(top = 18.dp, bottom = 0.dp)
@@ -214,7 +228,7 @@ private fun EquipItems() {
                 Spacer(modifier = Modifier.size(8.dp))
 
             Button(
-                onClick = { /*TODO*/ },
+                onClick = onClick,
                 modifier = Modifier.size(64.dp),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0x88C2B7EF)),
@@ -227,7 +241,6 @@ private fun EquipItems() {
                     contentScale = ContentScale.Fit
                 )
             }
-
 
             if (it == 7)
                 Spacer(modifier = Modifier.size(8.dp))
