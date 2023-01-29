@@ -26,6 +26,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Comment
+import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -34,6 +35,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -46,7 +52,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
 import com.haeyum.sodi.R
+import com.haeyum.sodi.data.api.getPost.WearTag
 import com.haeyum.sodi.ui.main.productDetail.ProductDetailActivity
 
 @Composable
@@ -65,11 +73,12 @@ fun DiscoverScreen(viewModel: DiscoverViewModel = hiltViewModel(), modifier: Mod
                     .verticalScroll(rememberScrollState())
                     .background(Color(0xFFFCFCFC))
             ) {
-                repeat(15) {
+                viewModel.discoverResponse.collectAsState().value?.drop(10)?.forEach {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(16.dp)
+                            .clip(RoundedCornerShape(12.dp))
                             .clickable {
                                 viewModel.showPopup.value = true
                             }
@@ -89,10 +98,17 @@ fun DiscoverScreen(viewModel: DiscoverViewModel = hiltViewModel(), modifier: Mod
                         val context = LocalContext.current
 
                         Column(modifier = Modifier.padding(horizontal = 18.dp)) {
-                            WriterProfile()
+                            WriterProfile(it.post.userName, it.post.date)
                             Spacer(modifier = Modifier.size(18.dp))
                             Row(modifier = Modifier.fillMaxWidth()) {
-                                Image(
+                                it.post.images.firstOrNull()?.let {
+                                    AsyncImage(
+                                        model = "http://ec2-43-201-75-12.ap-northeast-2.compute.amazonaws.com:8080/postImg/$it",
+                                        contentDescription = null,
+                                        modifier = Modifier.size(300.dp),
+                                        contentScale = ContentScale.FillWidth
+                                    )
+                                } ?: Image(
                                     painter = painterResource(id = R.drawable.ic_launcher_background),
                                     contentDescription = null,
                                     modifier = Modifier.weight(1f),
@@ -100,8 +116,15 @@ fun DiscoverScreen(viewModel: DiscoverViewModel = hiltViewModel(), modifier: Mod
                                 )
                             }
                         }
-                        EquipItems {
-                            context.startActivity(Intent(context, ProductDetailActivity::class.java))
+                        EquipItems(wearTags = it.wearTags) {
+                            context.startActivity(
+                                Intent(
+                                    context,
+                                    ProductDetailActivity::class.java
+                                ).apply {
+                                    putExtra("storeId", it)
+                                }
+                            )
                         }
                         Column(modifier = Modifier.padding(horizontal = 18.dp)) {
                             Row(
@@ -112,17 +135,19 @@ fun DiscoverScreen(viewModel: DiscoverViewModel = hiltViewModel(), modifier: Mod
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
                                 Row(verticalAlignment = Alignment.CenterVertically) {
+                                    var isFavorite by remember { mutableStateOf(false) }
+
                                     IconButton(
-                                        onClick = { /*TODO*/ },
+                                        onClick = { isFavorite = !isFavorite },
                                         modifier = Modifier.padding(0.dp)
                                     ) {
                                         Icon(
-                                            imageVector = Icons.Outlined.FavoriteBorder,
+                                            imageVector = if (isFavorite) Icons.Outlined.Favorite else Icons.Outlined.FavoriteBorder,
                                             contentDescription = "favorite"
                                         )
                                     }
                                     Text(
-                                        text = "1.2K",
+                                        text = it.post.likes.size.toString(),
                                         modifier = Modifier.offset(x = (-6).dp),
                                         fontSize = 14.sp,
                                         fontWeight = FontWeight.Medium
@@ -136,14 +161,14 @@ fun DiscoverScreen(viewModel: DiscoverViewModel = hiltViewModel(), modifier: Mod
                                         )
                                     }
                                     Text(
-                                        text = "525",
+                                        text = it.post.comments.size.toString(),
                                         modifier = Modifier.offset(x = (-6).dp),
                                         fontSize = 14.sp,
                                         fontWeight = FontWeight.Medium
                                     )
                                 }
                             }
-                            Description()
+                            Description(text = it.post.description)
                         }
                     }
                 }
@@ -153,7 +178,7 @@ fun DiscoverScreen(viewModel: DiscoverViewModel = hiltViewModel(), modifier: Mod
 }
 
 @Composable
-private fun WriterProfile() {
+private fun WriterProfile(username: String, date: String) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
@@ -168,13 +193,13 @@ private fun WriterProfile() {
         Spacer(modifier = Modifier.width(12.dp))
         Column {
             Text(
-                text = "PangMoo",
+                text = username,
                 color = Color.Black,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.ExtraBold
             )
             Text(
-                text = "2021.08.01",
+                text = date,
                 color = Color.DarkGray,
                 fontSize = 12.sp,
                 fontWeight = FontWeight.Light
@@ -204,9 +229,9 @@ private fun Header() {
 }
 
 @Composable
-private fun Description() {
+private fun Description(text: String) {
     Text(
-        text = "죽음의 한기 속에서 해커톤을 하는 당신, 이런 당신을 위한 코디입니다. 따뜻한 기모가 당신을 지켜줍니다.",
+        text = text,
         color = Color.Black,
         fontSize = 12.sp,
         fontWeight = FontWeight.Light,
@@ -215,7 +240,7 @@ private fun Description() {
 }
 
 @Composable
-private fun EquipItems(onClick: () -> Unit) {
+private fun EquipItems(wearTags: List<WearTag>, onClick: (String) -> Unit) {
     Row(
         modifier = Modifier
             .padding(top = 18.dp, bottom = 0.dp)
@@ -223,26 +248,26 @@ private fun EquipItems(onClick: () -> Unit) {
             .horizontalScroll(rememberScrollState()),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        repeat(8) {
-            if (it == 0)
+        wearTags.forEachIndexed { index, wearTag ->
+            if (index == 0)
                 Spacer(modifier = Modifier.size(8.dp))
 
             Button(
-                onClick = onClick,
+                onClick = { onClick(wearTag.storeId) },
                 modifier = Modifier.size(64.dp),
                 shape = RoundedCornerShape(12.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0x88C2B7EF)),
                 contentPadding = PaddingValues(0.dp)
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.logo_black),
+                AsyncImage(
+                    model = "http://ec2-43-201-75-12.ap-northeast-2.compute.amazonaws.com:8080/postImg/${wearTag.images.first()}",
                     contentDescription = null,
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Fit
                 )
             }
 
-            if (it == 7)
+            if (index == 7)
                 Spacer(modifier = Modifier.size(8.dp))
         }
     }
